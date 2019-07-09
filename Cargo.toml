@@ -1,0 +1,8 @@
+[package]
+name = "kekano"
+version = "0.1.0"
+authors = ["Simon Bergström <simon@menuan.se>"]
+edition = "2018"
+
+[dependencies]
+vulkano = "0.13"
