@@ -27,11 +27,6 @@ use vulkano::pipeline::ComputePipeline;
 
 use vulkano::sync::GpuFuture;
 
-struct MyStruct {
-    a: u32,
-    b: bool,
-}
-
 mod cs {
     vulkano_shaders::shader!{
         ty: "compute",
@@ -72,10 +67,6 @@ fn main() {
         .expect("failed to create instance");
     let physical = PhysicalDevice::enumerate(&instance).next().expect("no device available");
 
-    // for family in physical.queue_families() {
-    //     println!("Found a queue family with {:?} queue(s)", family.queues_count());
-    // }
-
     let queue_family = physical.queue_families()
         .find(|&q| q.supports_graphics())
         .expect("couldn't find a graphical queue family");
@@ -90,26 +81,6 @@ fn main() {
     };
 
     let queue = queues.next().unwrap();
-
-    // // let data = 12;
-    // let data = MyStruct { a: 5, b: true };
-    
-    // let buffer = CpuAccessibleBuffer::from_data(
-    //     device.clone(), BufferUsage::all(),
-    //     data
-    // ).expect("failed to create buffer");
-
-    // let iter = (0 .. 128).map(|_| 5u8);
-    // let buffer = CpuAccessibleBuffer::from_iter(
-    //     device.clone(),
-    //     BufferUsage::all(),
-    //     iter
-    // ).unwrap();
-    
-    // let command_buffer = AutoCommandBufferBuilder::new(device.clone(), queue.family())
-    //     .unwrap()
-    //     .copy_buffer(source.clone(), dest.clone()).unwrap()
-    //     .build().unwrap();
 
     let shader = cs::Shader::load(device.clone())
         .expect("failed to create shader module");
@@ -136,25 +107,12 @@ fn main() {
         (0 .. 2048 * 2048 * 4).map(|_| 0u8)
     ).expect("failed to create buffer");
 
-    // let command_buffer = AutoCommandBufferBuilder::new(device.clone(), queue.family()).unwrap()
-    //     .clear_color_image(image.clone(), ClearValue::Float([0.0, 0.0, 1.0, 1.0])).unwrap()
-    //     .copy_image_to_buffer(image.clone(), buf.clone()).unwrap()
-    //     .build().unwrap();
-
     let command_buffer = AutoCommandBufferBuilder::new(device.clone(), queue.family())
         .unwrap()
         .dispatch([2048 / 8, 2048 / 8, 1], compute_pipeline.clone(), set.clone(), ()).unwrap()
         .copy_image_to_buffer(image.clone(), buf.clone()).unwrap()
         .build().unwrap();
 
-    // let finished = command_buffer.execute(queue.clone()).unwrap();
-    // finished.then_signal_fence_and_flush().unwrap()
-    //     .wait(None).unwrap();
-
-    // let buffer_content = buf.read().unwrap();
-    // let image = ImageBuffer::<Rgba<u8>, _>::from_raw(2048, 2048, &buffer_content[..]).unwrap();
-
-    // image.save("image.png").unwrap();
     let finished = command_buffer.execute(queue.clone()).unwrap();
     finished.then_signal_fence_and_flush().unwrap()
         .wait(None).unwrap();
