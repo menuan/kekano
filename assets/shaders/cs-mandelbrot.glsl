@@ -12,9 +12,9 @@ void main() {
   float i;
   for (i = 0.0; i < 1.0; i += 0.005) {
     z = vec2(
-             z.x * z.x - z.y * z.y + c.x,
-             z.y * z.x + z.x * z.y + c.y
-             );
+      z.x * z.x - z.y * z.y + c.x,
+      z.y * z.x + z.x * z.y + c.y
+    );
 
     if (length(z) > 4.0) {
       break;
