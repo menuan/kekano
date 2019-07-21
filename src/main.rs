@@ -157,9 +157,15 @@ fn main() {
         vulkano::impl_vertex!(Vertex, position);
 
         CpuAccessibleBuffer::from_iter(device.clone(), BufferUsage::all(), [
-            Vertex { position: [-0.5, -0.25] },
-            Vertex { position: [0.0, 0.5] },
-            Vertex { position: [0.25, -0.1] }
+            // TL-TR-BL
+            Vertex { position: [-1.0, -1.0] },
+            Vertex { position: [1.0, -1.0] },
+            Vertex { position: [-1.0, 1.0] },
+
+            // BL-BR-TR
+            Vertex { position: [-1.0, 1.0] },
+            Vertex { position: [1.0, 1.0] },
+            Vertex { position: [1.0, -1.0] }
         ].iter().cloned()).unwrap()
     };
 
@@ -185,15 +191,8 @@ fn main() {
         }
     }
 
-    // mod mandelbrot {
-    //     vulkano_shaders::shader!{
-    //         ty: "fragment",
-    //         path: "./assets/shaders/mandelbrot.glsl"
-    //     }
-    // }
-
     let vs = vs::Shader::load(device.clone()).unwrap();
-    let fs = fs::Shader::load(device.clone()).unwrap();
+    let fs = mandelbrot::Shader::load(device.clone()).unwrap();
 
     // At this point, OpenGL initialization would be finished. However in Vulkan it is not. OpenGL
     // implicitly does a lot of computation whenever you draw. In Vulkan, you have to do all this
@@ -237,6 +236,9 @@ fn main() {
         // The type `SingleBufferDefinition` actually contains a template parameter corresponding
         // to the type of each vertex. But in this code it is automatically inferred.
         .vertex_input_single_buffer()
+
+
+
         // A Vulkan shader can in theory contain multiple entry points, so we have to specify
         // which one. The `main` word of `main_entry_point` actually corresponds to the name of
         // the entry point.

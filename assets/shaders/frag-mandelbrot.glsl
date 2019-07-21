@@ -3,9 +3,15 @@
 // uniform float scale;
 // uniform int iter;
 
+#version 450
+
+layout(location = 1) in vec2 gl_TexCoord[];
+
 layout(location = 0) out vec4 f_color;
 
 void main() {
+  float scale = 1.0;
+  vec2 center = vec2(0.0);
   vec2 z, c;
 
   c.x = 1.3333 * (gl_TexCoord[0].x - 0.5) * scale - center.x;
@@ -24,5 +30,7 @@ void main() {
     z.y = y;
   }
 
-  f_color = texture1D(tex, (i == iter ? 0.0 : float(i)) / 100.0);
+  vec4 to_write = vec4(vec3(i), 1.0);
+  // f_color = texture1D(tex, (i == iter ? 0.0 : float(i)) / 100.0);
+  f_color = to_write;
 }
