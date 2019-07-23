@@ -1,6 +1,12 @@
 
 ## MacOS
 
+Install using brew with the following command:
+
+```bash
+brew cask install apenngrace/homebrew-vulkan/vulkan-sdk
+```
+
 Paste this in some shell file according to your setup while making sure you set the appropriate vulkan-sdk version in `VULKAN_SDK`:
 
 ```bash
